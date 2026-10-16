@@ -73,3 +73,6 @@ Status
  Section C — SQL Database Script
  Part 2 — Implementation in c#
 
+<img width="874" height="392" alt="Screenshot 2026-10-14 224457" src="https://github.com/user-attachments/assets/618c2589-9f29-4f86-8f5f-38baa22072a1" /><img width="871" height="370" alt="Screenshot 2026-10-14 224521" src="https://github.com/user-attachments/assets/090c9fc0-b802-4243-bada-e3d8fb936d3c" />
+
+
