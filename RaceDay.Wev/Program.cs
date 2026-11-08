@@ -1,4 +1,9 @@
+using System.Globalization;
 using RaceDay.Web.Services;
+
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
