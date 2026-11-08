@@ -1,0 +1,44 @@
+﻿@model CategoryFormViewModel
+@{
+    ViewData["Title"] = "Edit category";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card rd-card p-4">
+            <h2 class="mb-1">Edit category</h2>
+            <p class="text-muted">@ViewBag.EventName</p>
+            <form asp-action="Edit" asp-route-id="@Model.CategoryId" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="EventId" />
+                <input type="hidden" asp-for="CategoryId" />
+                <div class="mb-3">
+                    <label asp-for="CategoryName" class="form-label"></label>
+                    <input asp-for="CategoryName" class="form-control" />
+                    <span asp-validation-for="CategoryName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="DistanceKm" class="form-label"></label>
+                    <input asp-for="DistanceKm" type="number" step="any" class="form-control" />
+                    <span asp-validation-for="DistanceKm" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="EntryFee" class="form-label"></label>
+                    <input asp-for="EntryFee" type="number" step="any" class="form-control" />
+                    <span asp-validation-for="EntryFee" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="MaxParticipants" class="form-label"></label>
+                    <input asp-for="MaxParticipants" type="number" class="form-control" />
+                    <span asp-validation-for="MaxParticipants" class="text-danger"></span>
+                </div>
+                <button class="btn btn-rd">Save changes</button>
+                <a class="btn btn-outline-secondary" asp-action="Index" asp-route-id="@Model.EventId">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

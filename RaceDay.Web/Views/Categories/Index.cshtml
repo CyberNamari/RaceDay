@@ -1,0 +1,84 @@
+﻿@model CategoriesPageViewModel
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div>
+        <h1 class="mb-0">Categories</h1>
+        <p class="text-muted mb-0">@Model.EventName</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-controller="ManageEvents" asp-action="Index">Back to events</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card rd-card p-3">
+            @if (!Model.Categories.Any())
+            {
+                <p class="text-muted mb-0">No categories yet. Add one using the form.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead><tr><th>Category</th><th>Distance</th><th>Fee</th><th>Max</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach (var c in Model.Categories)
+                            {
+                                <tr>
+                                    <td>@c.CategoryName</td>
+                                    <td>@(c.DistanceKm.HasValue? c.DistanceKm.Value.ToString("0.##") + " km" : "Age category")</td>
+                                    <td>@("R" + c.EntryFee.ToString("N2"))</td>
+                                    <td>@(c.MaxParticipants?.ToString() ?? "Unlimited")</td>
+                                    <td class="text-end text-nowrap">
+                                        <a class="btn btn-outline-secondary btn-sm" asp-action="Edit" asp-route-id="@c.CategoryId" asp-route-eventId="@Model.EventId">Edit</a>
+                                        <form asp-action="Delete" asp-route-id="@c.CategoryId" asp-route-eventId="@Model.EventId" method="post" class="d-inline"
+                                              onsubmit="return confirm('Delete this category?');">
+                                            <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card rd-card p-4">
+            <h4 class="mb-3">Add a category</h4>
+            <form asp-action="Create" asp-route-id="@Model.EventId" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Form.CategoryName" class="form-label"></label>
+                    <input asp-for="Form.CategoryName" class="form-control" placeholder="e.g. 10km, Under 20" />
+                    <span asp-validation-for="Form.CategoryName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Form.DistanceKm" class="form-label"></label>
+                    <input asp-for="Form.DistanceKm" type="number" step="any" class="form-control" />
+                    <div class="form-text">Leave blank for age categories.</div>
+                    <span asp-validation-for="Form.DistanceKm" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Form.EntryFee" class="form-label"></label>
+                    <input asp-for="Form.EntryFee" type="number" step="any" class="form-control" />
+                    <span asp-validation-for="Form.EntryFee" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Form.MaxParticipants" class="form-label"></label>
+                    <input asp-for="Form.MaxParticipants" type="number" class="form-control" />
+                    <span asp-validation-for="Form.MaxParticipants" class="text-danger"></span>
+                </div>
+                <button class="btn btn-rd w-100">Add category</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
