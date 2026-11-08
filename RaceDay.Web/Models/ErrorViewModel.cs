@@ -1,4 +1,4 @@
-namespace RaceDay.Wev.Models
+namespace RaceDay.Web.Models
 {
     public class ErrorViewModel
     {
