@@ -66,3 +66,18 @@ h1, h2, h3, h4, .navbar-brand {
     color: #6b7686;
     font-size: .9rem;
 }
+.rd-type {
+    background: var(--rd-navy);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.rd-stat {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    color: var(--rd-orange);
+}
+
+.table > :not(caption) > * > * {
+    vertical-align: middle;
+}
