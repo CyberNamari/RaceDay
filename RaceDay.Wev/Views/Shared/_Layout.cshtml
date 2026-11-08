@@ -18,11 +18,38 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="mainNav">
+                    @{
+                        var me = Context.Session.GetCurrentUser();
+                    }
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Events</a>
-                        </li>
-                        @* Role-based links are added in the auth step *@
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Events</a></li>
+                        @if (me?.Role == "Participant")
+                        {
+                            <li class="nav-item"><a class="nav-link" href="#">My Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">My Results</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                        }
+                        @if (me?.Role == "Organiser")
+                        {
+                            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Manage Events</a></li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (me is null)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><span class="navbar-text me-3">@me.FullName (@me.Role)</span></li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button class="btn btn-outline-light btn-sm">Log out</button>
+                                </form>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
