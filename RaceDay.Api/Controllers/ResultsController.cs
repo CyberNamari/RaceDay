@@ -169,4 +169,4 @@ public class ResultsController : ControllerBase
             .ThenBy(r => r.FinishTime ?? TimeOnly.MaxValue)
             .Select(r => ResultResponse.From(r)));
     }
-}
+}       
