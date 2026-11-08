@@ -166,6 +166,7 @@ public class RegistrationsController : ControllerBase
 
         return NoContent();
     }
+
     /// <summary>Confirms a Participant's entry. Only the Organiser who owns the event can do this.</summary>
     /// <response code="200">Returns the confirmed entry.</response>
     /// <response code="401">Not logged in.</response>
@@ -197,4 +198,5 @@ public class RegistrationsController : ControllerBase
         var updated = await RegistrationsWithDetails().FirstAsync(r => r.RegistrationID == registrationId);
         return Ok(RegistrationResponse.From(updated));
     }
+
 }
