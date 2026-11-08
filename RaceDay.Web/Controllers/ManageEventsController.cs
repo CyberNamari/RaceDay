@@ -83,9 +83,11 @@ public class ManageEventsController : BaseController
             await LoadVenues(model);
             return View("Form", model);
         }
-
-        TempData["Success"] = "Event created. Next, add its distance categories.";
+        TempData["Success"] = "Event created. Now add its distance categories.";
+        if (r.Data is not null)
+            return RedirectToAction("Index", "Categories", new { id = r.Data.EventId });
         return RedirectToAction(nameof(Index));
+
     }
 
     [HttpGet]

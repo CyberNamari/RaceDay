@@ -36,6 +36,9 @@ else
                             <td>@r.Distances</td>
                             <td><partial name="_StatusBadge" model="r.Event.Status" /></td>
                             <td class="text-end text-nowrap">
+                                <a class="btn btn-outline-secondary btn-sm" asp-controller="Categories" asp-action="Index" asp-route-id="@r.Event.EventId">Categories</a>
+                                <a class="btn btn-outline-secondary btn-sm" asp-controller="EventEnrolments" asp-action="Index" asp-route-id="@r.Event.EventId">Enrolments</a>
+                                <a class="btn btn-outline-secondary btn-sm" asp-controller="ResultsEntry" asp-action="Index" asp-route-id="@r.Event.EventId">Results</a>
                                 <a class="btn btn-outline-secondary btn-sm" asp-action="Edit" asp-route-id="@r.Event.EventId">Edit</a>
                                 <form asp-action="Delete" asp-route-id="@r.Event.EventId" method="post" class="d-inline"
                                       onsubmit="return confirm('Delete this event? This cannot be undone.');">
