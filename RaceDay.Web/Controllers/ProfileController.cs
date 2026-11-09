@@ -29,7 +29,8 @@ public class ProfileController : BaseController
             Email = r.Data.Email,
             PhoneNumber = r.Data.PhoneNumber,
             Role = r.Data.Role,
-            MemberSince = r.Data.CreatedAt
+            MemberSince = r.Data.CreatedAt,
+            ProfilePictureUrl = r.Data.ProfilePictureUrl
         });
     }
 
@@ -59,6 +60,24 @@ public class ProfileController : BaseController
         HttpContext.Session.SetCurrentUser(me);
 
         TempData["Success"] = "Your profile has been updated.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadPicture(IFormFile? picture)
+    {
+        if (picture is null || picture.Length == 0)
+        {
+            TempData["Error"] = "Please choose an image first.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var r = await _api.PostFileAsync<object>("api/users/me/picture", picture);
+        var expired = SessionExpired(r);
+        if (expired != null) return expired;
+
+        if (r.Success) TempData["Success"] = "Profile picture updated.";
+        else TempData["Error"] = r.Error;
         return RedirectToAction(nameof(Index));
     }
 }
