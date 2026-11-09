@@ -1,0 +1,61 @@
+﻿@model VenueFormViewModel
+@{
+    ViewData["Title"] = "New venue";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card rd-card p-4">
+            <h2 class="mb-3">Add a venue</h2>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="VenueName" class="form-label"></label>
+                    <input asp-for="VenueName" class="form-control" />
+                    <span asp-validation-for="VenueName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Address" class="form-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="City" class="form-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Province" class="form-label"></label>
+                        <input asp-for="Province" class="form-control" />
+                        <span asp-validation-for="Province" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Latitude" class="form-label"></label>
+                        <input asp-for="Latitude" type="number" step="any" class="form-control" placeholder="e.g. -33.9249" />
+                        <span asp-validation-for="Latitude" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Longitude" class="form-label"></label>
+                        <input asp-for="Longitude" type="number" step="any" class="form-control" placeholder="e.g. 18.4241" />
+                        <span asp-validation-for="Longitude" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-text mb-3">
+                    Coordinates are optional but needed for the weather box on the event page.
+                    In Google Maps, right-click the venue and click the numbers to copy them.
+                </div>
+
+                <button class="btn btn-rd">Add venue</button>
+                <a class="btn btn-outline-secondary" asp-controller="ManageEvents" asp-action="Create">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

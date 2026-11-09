@@ -46,6 +46,7 @@ public class UserResponse
     public string? PhoneNumber { get; set; }
     public string Role { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 
     public static UserResponse From(AppUser u) => new()
     {
@@ -54,6 +55,7 @@ public class UserResponse
         Email = u.Email,
         PhoneNumber = u.PhoneNumber,
         Role = u.Role,
-        CreatedAt = u.CreatedAt
+        CreatedAt = u.CreatedAt,
+        ProfilePictureUrl = u.ProfilePictureUrl
     };
 }

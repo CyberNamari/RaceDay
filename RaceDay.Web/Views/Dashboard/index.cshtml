@@ -1,0 +1,78 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var today = DateOnly.FromDateTime(DateTime.Today);
+}
+
+<h1 class="mb-3">Organiser Dashboard</h1>
+
+@if (Model.Error != null)
+{
+    <div class="alert alert-danger">@Model.Error</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card rd-card p-3 text-center">
+            <div class="rd-stat">@Model.TotalEvents</div><div class="text-muted">Events created</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card rd-card p-3 text-center">
+            <div class="rd-stat">@Model.UpcomingEvents</div><div class="text-muted">Upcoming events</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card rd-card p-3 text-center">
+            <div class="rd-stat">@Model.TotalEnrolments</div><div class="text-muted">Total enrolments</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card rd-card p-3 text-center">
+            <div class="rd-stat">@Model.PendingEnrolments</div><div class="text-muted">Awaiting confirmation</div>
+        </div>
+    </div>
+</div>
+
+<div class="card rd-card p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">My events</h3>
+        <a class="btn btn-rd btn-sm" asp-controller="ManageEvents" asp-action="Create">+ New event</a>
+    </div>
+
+    @if (!Model.Rows.Any())
+    {
+        <p class="text-muted mb-0">
+            You haven't created any events yet.
+            <a asp-controller="ManageEvents" asp-action="Create">Create your first event</a>.
+        </p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Event</th><th>Date</th><th>Status</th><th>Enrolments</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var r in Model.Rows)
+                    {
+                        var days = r.Event.EventDate.DayNumber - today.DayNumber;
+                        var when = days > 1 ? $"In {days} days" : days == 1 ? "Tomorrow" : days == 0 ? "Today" : "Past";
+                        <tr>
+                            <td>@r.Event.EventName<br /><small class="text-muted">@r.Event.VenueName, @r.Event.City</small></td>
+                            <td>@r.Event.EventDate.ToString("ddd, d MMM yyyy")<br /><small class="text-muted">@when</small></td>
+                            <td><partial name="_StatusBadge" model="r.Event.Status" /></td>
+                            <td>
+                                <strong>@r.TotalEnrolments</strong>
+                                <span class="badge bg-success">@r.Confirmed confirmed</span>
+                                <span class="badge bg-warning text-dark">@r.Pending pending</span>
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-outline-secondary btn-sm" asp-controller="ManageEvents" asp-action="Edit" asp-route-id="@r.Event.EventId">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

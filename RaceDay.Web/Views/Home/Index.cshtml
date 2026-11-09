@@ -1,0 +1,76 @@
+﻿@model HomeViewModel
+@{
+    ViewData["Title"] = "Upcoming Events";
+}
+
+<div class="rd-hero">
+    <h1>Find your next race</h1>
+    <p>Run, walk or ride. Pick an event, choose your distance and get on the start line.</p>
+</div>
+
+
+<h1 class="mb-3">Upcoming Events</h1>
+
+<form method="get" class="card rd-card p-3 mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label" for="city">City</label>
+            <select class="form-select" id="city" name="city">
+                <option value="">All cities</option>
+                @foreach (var c in Model.Cities)
+                {
+                    <option value="@c" selected="@(c == Model.City)">@c</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="eventType">Type</label>
+            <select class="form-select" id="eventType" name="eventType">
+                <option value="">All types</option>
+                @foreach (var t in new[] { "Run", "Walk", "Cycle" })
+                {
+                    <option value="@t" selected="@(t == Model.EventType)">@t</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="date">Date</label>
+            <input type="date" class="form-control" id="date" name="date"
+                   value="@(Model.Date?.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button class="btn btn-rd flex-fill">Filter</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+        </div>
+    </div>
+</form>
+
+@if (Model.Error != null)
+{
+    <div class="alert alert-danger">@Model.Error</div>
+}
+else if (!Model.Events.Any())
+{
+    <div class="alert alert-info">No upcoming events match your filters.</div>
+}
+
+<div class="row g-3">
+    @foreach (var e in Model.Events)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card rd-card h-100">
+                @if (!string.IsNullOrEmpty(e.BannerUrl))
+                {
+                    <img src="@e.BannerUrl" class="rd-card-img" alt="@e.EventName banner" />
+                }
+                <div class="card-body d-flex flex-column">
+                    <span class="badge rd-type mb-2 align-self-start">@e.EventType</span>
+                    <h4 class="card-title">@e.EventName</h4>
+                    <p class="mb-1">@e.EventDate.ToString("ddd, d MMM yyyy") at @e.StartTime.ToString("HH:mm")</p>
+                    <p class="text-muted">@e.VenueName, @e.City</p>
+                    <a class="btn btn-rd mt-auto" asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId">View details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

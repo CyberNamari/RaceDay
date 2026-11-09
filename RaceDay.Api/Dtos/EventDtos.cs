@@ -60,6 +60,8 @@ public class EventSummaryResponse
     public string VenueName { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public string Province { get; set; } = string.Empty;
+    public string? BannerUrl { get; set; }
+
 
     public static EventSummaryResponse From(Event e) => new()
     {
@@ -72,7 +74,8 @@ public class EventSummaryResponse
         OrganiserId = e.OrganiserID,
         VenueName = e.Venue.VenueName,
         City = e.Venue.City,
-        Province = e.Venue.Province
+        Province = e.Venue.Province,
+         BannerUrl = e.BannerUrl
     };
 }
 
@@ -87,6 +90,7 @@ public class EventDetailResponse
     public string Status { get; set; } = string.Empty;
     public int OrganiserId { get; set; }
     public string OrganiserName { get; set; } = string.Empty;
+    public string? BannerUrl { get; set; }
     public VenueResponse Venue { get; set; } = null!;
     public List<CategoryResponse> Categories { get; set; } = new();
 
@@ -101,6 +105,7 @@ public class EventDetailResponse
         Status = e.Status,
         OrganiserId = e.OrganiserID,
         OrganiserName = e.Organiser.FullName,
+        BannerUrl = e.BannerUrl,
         Venue = VenueResponse.From(e.Venue),
         Categories = e.Categories.OrderBy(c => c.CategoryName).Select(CategoryResponse.From).ToList()
     };

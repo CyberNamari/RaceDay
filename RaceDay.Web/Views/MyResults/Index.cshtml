@@ -1,0 +1,44 @@
+﻿@model List<ResultRowViewModel>
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h1 class="mb-3">My Results</h1>
+
+@if (ViewBag.Error is string err)
+{
+    <div class="alert alert-danger">@err</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No results yet. Results appear here after an organiser publishes them for events you've entered.
+    </div>
+}
+else
+{
+    <div class="card rd-card p-3">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Overall position</th><th>Category position</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>@r.EventName</td>
+                            <td>@r.EventDate.ToString("d MMM yyyy")</td>
+                            <td>@r.CategoryName</td>
+                            <td>@(r.FinishTime?.ToString("HH:mm:ss") ?? "-")</td>
+                            <td>@Format.Position(r.OverallPosition, r.TotalOverall)</td>
+                            <td>@Format.Position(r.CategoryPosition, r.TotalCategory)</td>
+                            <td><partial name="_StatusBadge" model="r.Status" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

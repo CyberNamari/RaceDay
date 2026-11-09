@@ -13,6 +13,11 @@ builder.Services.AddDbContext<RaceDayDbContext>(options =>
 
 builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
 builder.Services.AddHttpClient<IWeatherService, WeatherService>(client => client.Timeout = TimeSpan.FromSeconds(10));
+builder.Services.AddHttpContextAccessor();
+if (string.IsNullOrWhiteSpace(builder.Configuration["AzureStorage:ConnectionString"]))
+    builder.Services.AddScoped<IBlobStorageService, LocalImageStorageService>();
+else
+    builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
 // Session management: a server-issued, HttpOnly session cookie carries the user's identity and role.
 builder.Services
@@ -58,6 +63,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseStaticFiles();
 
 app.Run();
 

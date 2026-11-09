@@ -1,0 +1,91 @@
+﻿@model EventDetailViewModel
+@{
+    var e = Model.Event;
+    var me = Context.Session.GetCurrentUser();
+    ViewData["Title"] = e.EventName;
+}
+
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+    <div>
+        <span class="badge rd-type mb-2">@e.EventType</span>
+        <h1 class="mb-0">@e.EventName</h1>
+    </div>
+    <partial name="_StatusBadge" model="e.Status" />
+</div>
+@if (!string.IsNullOrEmpty(e.BannerUrl))
+{
+    <img src="@e.BannerUrl" class="rd-banner mb-4" alt="@e.EventName banner" />
+}
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card rd-card p-4 mb-4">
+            <p class="mb-1"><strong>Date:</strong> @e.EventDate.ToString("dddd, d MMMM yyyy") at @e.StartTime.ToString("HH:mm")</p>
+            <p class="mb-1"><strong>Venue:</strong> @e.Venue.VenueName, @e.Venue.Address, @e.Venue.City, @e.Venue.Province</p>
+            <p class="mb-3"><strong>Organiser:</strong> @e.OrganiserName</p>
+            <p class="mb-0">@(string.IsNullOrWhiteSpace(e.Description) ? "No description provided." : e.Description)</p>
+        </div>
+
+        <div class="card rd-card p-4">
+            <h3 class="mb-3">Categories</h3>
+            @if (!e.Categories.Any())
+            {
+                <p class="text-muted mb-0">No categories have been added yet.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead><tr><th>Category</th><th>Distance</th><th>Entry fee</th><th>Spots</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach (var c in e.Categories)
+                            {
+                                <tr>
+                                    <td>@c.CategoryName</td>
+                                    <td>@(c.DistanceKm.HasValue? c.DistanceKm.Value.ToString("0.##") + " km" : "Age category")</td>
+                                    <td>@("R" + c.EntryFee.ToString("N2"))</td>
+                                    <td>@(c.MaxParticipants?.ToString() ?? "Unlimited")</td>
+                                    <td class="text-end">
+                                        @if (me?.Role == "Participant" && e.Status == "Scheduled")
+                                        {
+                                            <form asp-controller="Enrolments" asp-action="Enrol" method="post" class="d-inline">
+                                                <input type="hidden" name="categoryId" value="@c.CategoryId" />
+                                                <input type="hidden" name="eventId" value="@e.EventId" />
+                                                <button class="btn btn-rd btn-sm">Enrol</button>
+                                            </form>
+                                        }
+                                        else if (me is null && e.Status == "Scheduled")
+                                        {
+                                            <a class="btn btn-outline-secondary btn-sm" asp-controller="Account" asp-action="Login"
+                                               asp-route-returnUrl="@Context.Request.Path">Log in to enrol</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card rd-card p-4">
+            <h4>Race-day weather</h4>
+            @if (Model.Weather != null)
+            {
+                <div class="rd-stat">@Model.Weather.Temperature.ToString("0.#")&deg;C</div>
+                <p class="mb-1">@Model.Weather.Condition</p>
+                <p class="mb-0 text-muted">Wind: @Model.Weather.WindSpeed.ToString("0.#") km/h</p>
+            }
+            else if (me is null)
+            {
+                <p class="text-muted mb-0">Log in to see the weather at this venue.</p>
+            }
+            else
+            {
+                <p class="text-muted mb-0">Weather isn't available for this event.</p>
+            }
+        </div>
+    </div>
+</div>

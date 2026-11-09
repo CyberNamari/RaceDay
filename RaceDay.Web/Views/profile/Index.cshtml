@@ -1,0 +1,62 @@
+﻿@model ProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="row justify-content-center g-4">
+    <div class="col-md-4">
+        <div class="card rd-card p-4 text-center">
+            @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+            {
+                <img src="@Model.ProfilePictureUrl" class="rd-avatar mx-auto mb-3" alt="Profile picture" />
+            }
+            else
+            {
+                <div class="rd-avatar-empty mx-auto mb-3">@(Model.FullName.Length > 0 ? Model.FullName.Substring(0, 1).ToUpper() : "?")</div>
+            }
+            <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+                <input type="file" name="picture" class="form-control form-control-sm mb-2" accept="image/jpeg,image/png,image/webp" />
+                <button class="btn btn-rd btn-sm w-100">Upload picture</button>
+                <div class="form-text">JPEG, PNG or WebP, up to 5 MB.</div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card rd-card p-4">
+            <h2 class="mb-3">My Profile</h2>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="ProfilePictureUrl" />
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label"></label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <p class="text-muted">
+                    Role: <strong>@Model.Role</strong>
+                    @if (Model.MemberSince.HasValue)
+                    {
+                        <text> &middot; Member since @Model.MemberSince.Value.ToString("d MMM yyyy")</text>
+                    }
+                </p>
+                <input type="hidden" asp-for="Role" />
+                <button class="btn btn-rd">Save changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
