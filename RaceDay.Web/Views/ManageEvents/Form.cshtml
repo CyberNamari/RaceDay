@@ -9,9 +9,10 @@
         <div class="card rd-card p-4">
             <h2 class="mb-3">@ViewData["Title"]</h2>
 
-            <form method="post" asp-action="@(isEdit ? "Edit" : "Create")" asp-route-id="@(isEdit ? Model.EventId.ToString() : null)">
+            <form method="post" enctype="multipart/form-data" asp-action="@(isEdit ? "Edit" : "Create")" asp-route-id="@(isEdit ? Model.EventId.ToString() : null)">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                 <input type="hidden" asp-for="VenueName" />
+                <input type="hidden" asp-for="BannerUrl" />
 
                 <div class="mb-3">
                     <label asp-for="EventName" class="form-label"></label>
@@ -67,6 +68,16 @@
                     <label asp-for="Description" class="form-label"></label>
                     <textarea asp-for="Description" class="form-control" rows="4"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="Banner">Event banner image</label>
+                    @if (!string.IsNullOrEmpty(Model.BannerUrl))
+                    {
+                        <div class="mb-2"><img src="@Model.BannerUrl" class="rd-banner-preview" alt="Current banner" /></div>
+                    }
+                    <input type="file" name="Banner" id="Banner" class="form-control" accept="image/jpeg,image/png,image/webp" />
+                    <div class="form-text">JPEG, PNG or WebP, up to 5 MB. @(isEdit ? "Leave empty to keep the current banner." : "Optional.")</div>
                 </div>
 
                 @if (isEdit)

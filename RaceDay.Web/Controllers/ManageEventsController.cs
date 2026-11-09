@@ -16,6 +16,13 @@ public class ManageEventsController : BaseController
         vm.Venues = v.Data ?? new List<VenueDto>();
     }
 
+    private async Task<string?> UploadBanner(int eventId, IFormFile? banner)
+    {
+        if (banner is null || banner.Length == 0) return null;
+        var r = await _api.PostFileAsync<object>($"api/events/{eventId}/banner", banner);
+        return r.Success ? null : r.Error;
+    }
+
     public async Task<IActionResult> Index()
     {
         var me = HttpContext.Session.GetCurrentUser()!;
@@ -77,17 +84,19 @@ public class ManageEventsController : BaseController
         var expired = SessionExpired(r);
         if (expired != null) return expired;
 
-        if (!r.Success)
+        if (!r.Success || r.Data is null)
         {
             ModelState.AddModelError("", r.Error ?? "We couldn't create the event.");
             await LoadVenues(model);
             return View("Form", model);
         }
-        TempData["Success"] = "Event created. Now add its distance categories.";
-        if (r.Data is not null)
-            return RedirectToAction("Index", "Categories", new { id = r.Data.EventId });
-        return RedirectToAction(nameof(Index));
 
+        var bannerError = await UploadBanner(r.Data.EventId, model.Banner);
+        TempData["Success"] = "Event created. Now add its distance categories.";
+        if (bannerError != null)
+            TempData["Error"] = "The event was created, but the banner could not be uploaded: " + bannerError;
+
+        return RedirectToAction("Index", "Categories", new { id = r.Data.EventId });
     }
 
     [HttpGet]
@@ -116,7 +125,8 @@ public class ManageEventsController : BaseController
             Description = ev.Data.Description,
             Status = ev.Data.Status,
             VenueId = ev.Data.Venue.VenueId,
-            VenueName = $"{ev.Data.Venue.VenueName}, {ev.Data.Venue.City}"
+            VenueName = $"{ev.Data.Venue.VenueName}, {ev.Data.Venue.City}",
+            BannerUrl = ev.Data.BannerUrl
         });
     }
 
@@ -141,6 +151,13 @@ public class ManageEventsController : BaseController
         if (!r.Success)
         {
             ModelState.AddModelError("", r.Error ?? "We couldn't update the event.");
+            return View("Form", model);
+        }
+
+        var bannerError = await UploadBanner(id, model.Banner);
+        if (bannerError != null)
+        {
+            ModelState.AddModelError("", "Event details saved, but the banner could not be uploaded: " + bannerError);
             return View("Form", model);
         }
 
