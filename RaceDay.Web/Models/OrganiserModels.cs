@@ -54,6 +54,8 @@ public class EventFormViewModel
     public string VenueName { get; set; } = "";
 
     public List<VenueDto> Venues { get; set; } = new();
+    public IFormFile? Banner { get; set; }
+    public string? BannerUrl { get; set; }
 }
 
 public class VenueFormViewModel

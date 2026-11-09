@@ -33,6 +33,7 @@ public class EventSummaryDto
     public string VenueName { get; set; } = "";
     public string City { get; set; } = "";
     public string Province { get; set; } = "";
+    public string? ProfilePictureUrl { get; set; }
 }
 
 public class EventDetailDto
@@ -48,6 +49,7 @@ public class EventDetailDto
     public string OrganiserName { get; set; } = "";
     public VenueDto Venue { get; set; } = new();
     public List<CategoryDto> Categories { get; set; } = new();
+    public string? BannerUrl { get; set; }
 }
 
 public class ResultDto
@@ -88,6 +90,7 @@ public class UserDto
     public string? PhoneNumber { get; set; }
     public string Role { get; set; } = "";
     public DateTime CreatedAt { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 }
 
 public class WeatherDto

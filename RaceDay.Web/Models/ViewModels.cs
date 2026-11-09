@@ -44,4 +44,5 @@ public class ProfileViewModel
 
     public string Role { get; set; } = "";
     public DateTime? MemberSince { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 }

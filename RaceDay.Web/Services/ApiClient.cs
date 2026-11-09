@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace RaceDay.Web.Services;
@@ -26,6 +27,17 @@ public class ApiClient
         SendAsync<T>(() => _http.PutAsJsonAsync(url, body, Json));
     public Task<ApiResult<object>> DeleteAsync(string url) =>
         SendAsync<object>(() => _http.DeleteAsync(url));
+
+    public Task<ApiResult<T>> PostFileAsync<T>(string url, IFormFile file) =>
+        SendAsync<T>(async () =>
+        {
+            using var content = new MultipartFormDataContent();
+            await using var stream = file.OpenReadStream();
+            var part = new StreamContent(stream);
+            part.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            content.Add(part, "file", file.FileName);
+            return await _http.PostAsync(url, content);
+        });
 
     private static async Task<ApiResult<T>> SendAsync<T>(Func<Task<HttpResponseMessage>> call)
     {
@@ -56,7 +68,6 @@ public class ApiClient
         }
     }
 
-    // Understands { "message": "..." } and the standard validation "errors" format
     private static async Task<string> ReadError(HttpResponseMessage response)
     {
         try
