@@ -12,6 +12,10 @@
     </div>
     <partial name="_StatusBadge" model="e.Status" />
 </div>
+@if (!string.IsNullOrEmpty(e.BannerUrl))
+{
+    <img src="@e.BannerUrl" class="rd-banner mb-4" alt="@e.EventName banner" />
+}
 
 <div class="row g-4">
     <div class="col-lg-8">

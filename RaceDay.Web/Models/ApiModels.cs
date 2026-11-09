@@ -34,7 +34,9 @@ public class EventSummaryDto
     public string City { get; set; } = "";
     public string Province { get; set; } = "";
     public string? ProfilePictureUrl { get; set; }
+    public string? BannerUrl { get; set; }
 }
+
 
 public class EventDetailDto
 {
@@ -49,7 +51,7 @@ public class EventDetailDto
     public string OrganiserName { get; set; } = "";
     public VenueDto Venue { get; set; } = new();
     public List<CategoryDto> Categories { get; set; } = new();
-    public string? BannerUrl { get; set; }
+    public string? BannerUrl { get; set; } 
 }
 
 public class ResultDto
