@@ -35,6 +35,17 @@ public class HomeController : Controller
         };
         return View(vm);
     }
+    public IActionResult Status(int code)
+    {
+        ViewBag.Code = code;
+        ViewBag.Message = code switch
+        {
+            404 => "We couldn't find that page.",
+            403 => "You don't have permission to see that page.",
+            _ => "Something went wrong."
+        };
+        return View();
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() =>
