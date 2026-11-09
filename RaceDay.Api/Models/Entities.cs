@@ -15,6 +15,7 @@ public class AppUser
     public string Role { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
     public DateTime CreatedAt { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 
     public ICollection<Event> OrganisedEvents { get; set; } = new List<Event>();
     public ICollection<Registration> Registrations { get; set; } = new List<Registration>();
@@ -44,9 +45,11 @@ public class Event
     public TimeOnly StartTime { get; set; }
     public string? Description { get; set; }
     public string Status { get; set; } = "Scheduled";
+    public string? BannerUrl { get; set; }
 
     public AppUser Organiser { get; set; } = null!;
     public Venue Venue { get; set; } = null!;
+    public string? ProfilePictureUrl { get; set; }
     public ICollection<Category> Categories { get; set; } = new List<Category>();
 }
 

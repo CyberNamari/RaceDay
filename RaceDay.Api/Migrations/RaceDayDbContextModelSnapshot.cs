@@ -58,6 +58,9 @@ namespace RaceDay.Api.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -120,6 +123,9 @@ namespace RaceDay.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventID"));
 
+                    b.Property<string>("BannerUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("varchar(max)");
 
@@ -140,6 +146,9 @@ namespace RaceDay.Api.Migrations
 
                     b.Property<int>("OrganiserID")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time");
