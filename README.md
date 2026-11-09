@@ -58,4 +58,4 @@ GitHub Actions builds the API and MVC projects, runs the tests and builds the Do
 
 ## Demo video
 
-[Watch the demonstration on YouTube](PASTE-YOUR-UNLISTED-YOUTUBE-LINK-HERE)
+[Watch the demonstration on YouTube]https://youtu.be/p1DvxiIWgaI
