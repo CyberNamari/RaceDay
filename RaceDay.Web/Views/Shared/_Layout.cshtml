@@ -25,14 +25,14 @@
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Events</a></li>
                         @if (me?.Role == "Participant")
                         {
-                            <li class="nav-item"><a class="nav-link" href="#">My Enrolments</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">My Results</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Enrolments" asp-action="Index">My Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="MyResults" asp-action="Index">My Results</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Profile" asp-action="Index">Profile</a></li>
                         }
                         @if (me?.Role == "Organiser")
                         {
-                            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Manage Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="ManageEvents" asp-action="Index">Manage Events</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Profile" asp-action="Index">Profile</a></li>
                         }
                     </ul>

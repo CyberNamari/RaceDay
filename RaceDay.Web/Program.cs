@@ -1,15 +1,15 @@
 using System.Globalization;
 using RaceDay.Web.Services;
 
+// Use "." as the decimal separator everywhere (browsers always send numbers with a dot)
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(o =>
+    o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
-// Session: holds the logged-in user and the API cookie, per browser
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(o =>
@@ -20,33 +20,41 @@ builder.Services.AddSession(o =>
     o.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
-// API client: every call to the Part 2 API goes through this
+var apiBaseUrl = builder.Configuration["Api:BaseUrl"]
+    ?? throw new InvalidOperationException("Api:BaseUrl is not configured.");
+
+// Trust the API's local dev certificate in Development, or when explicitly enabled (Docker)
+var trustAnyCertificate = builder.Environment.IsDevelopment()
+    || builder.Configuration.GetValue<bool>("Api:TrustAnyCertificate");
+
 builder.Services.AddTransient<ApiCookieHandler>();
-builder.Services.AddHttpClient("RaceDayApi", c =>
-        c.BaseAddress = new Uri(builder.Configuration["Api:BaseUrl"]!))
-    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+builder.Services.AddHttpClient("RaceDayApi", c => c.BaseAddress = new Uri(apiBaseUrl))
+    .ConfigurePrimaryHttpMessageHandler(() =>
     {
-        UseCookies = false,   // we manage the cookie per user in session
-        // DEV ONLY: accept the local dev certificate
-        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        var handler = new HttpClientHandler { UseCookies = false };
+        if (trustAnyCertificate)
+            handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+        return handler;
     })
     .AddHttpMessageHandler<ApiCookieHandler>();
 builder.Services.AddScoped<ApiClient>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseStatusCodePagesWithReExecute("/Home/Status", "?code={0}");
+
 app.UseStaticFiles();
-
 app.UseRouting();
-
-app.UseSession();        
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(

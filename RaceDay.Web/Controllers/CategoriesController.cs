@@ -41,7 +41,7 @@ public class CategoriesController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(int id, CategoryFormViewModel model)
+    public async Task<IActionResult> Create(int id, [Bind(Prefix = "Form")] CategoryFormViewModel model)
     {
         var ev = await LoadOwnEvent(id);
         if (ev is null) return NotYours();
